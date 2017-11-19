@@ -1,0 +1,109 @@
+NOTE
+#------------
+#DISK PARTITIONING  <<GPT>>
+sda                 465,8G  0 disk  
+├─sda1  <BIOS boot>     2M  0 part  
+├─sda2                  1G  0 part  
+| └─encrypred-boot      1G  0 crypt /boot
+└─sda3              465,8G  0 part  
+  └─encrypred-lvm   465,8G  0 crypt 
+    ├─notebook-root   100G  0 lvm   /
+    └─notebook-home   200G  0 lvm   /home
+#------------
+#DURING INSTALLATION
+mount /dev/sda2 /mnt/gentoo/boot/
+mount --bind /dev/ /mnt/gentoo/dev/
+mount --bind /sys/ /mnt/gentoo/sys/
+mount --bind /run/ /mnt/gentoo/run/
+mount -t proc none /mnt/gentoo/proc/
+#------------
+#LUKS - KERNEL 
+[*] Enable loadable module support
+Device Drivers --->
+    [*] Multiple devices driver support (RAID and LVM) --->
+        <*> Device mapper support
+        <*> Crypt target support
+[*] Cryptographic API --->
+    <*> XTS support
+    <*> SHA224 and SHA256 digest algorithm
+    <*> AES cipher algorithms
+    <*> AES cipher algorithms (x86_64)
+    <*> User-space interface for symmetric key cipher algorithms
+General setup  --->
+    [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+#COMM
+cryptsetup --verbose --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat /dev/sda2
+#CREATE KEY
+dd bs=512 count=4 if=/dev/urandom of=/boot/overlay/mnt/key/root_luks.key
+cryptsetup luksAddKey /dev/sda1 /boot/overlay/mnt/key/root_luks.key
+#------------
+#GRUB
+cat >/etc/default/grub << EOF
+GRUB_DISTRIBUTOR="corebook"
+GRUB_TIMEOUT=5
+GRUB_CMDLINE_LINUX="udev dolvm crypt_root=UUID=e6c28daf-feee-4258-b6a8-c013887a4d9c real_root=UUID=fe878eb4-f4ca-4400-af73-1b0ff0bd0312 crypt_device=UUID=e6c28daf-feee-4258-b6a8-c013887a4d9c:encrypted-lvm root_key=root_luks.key root_trim=yes"
+GRUB_ENABLE_CRYPTODISK=y    #for encrypted boot
+GRUB_TERMINAL=console
+GRUB_DISABLE_SUBMENU=y
+EOF
+
+mkdir -p /boot/overlay/mnt/key/  "root_luks.key"   #for insert luks key in initramfs
+
+#COMM
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+#------------
+#FSTAB --> directories stored in memory
+cat > /etc/fstab <<  EOF
+# tmps
+tmpfs                                           /tmp            tmpfs           size=4Gb        0 0
+tmpfs                                           /run            tmpfs           size=100M       0 0
+# shm
+shm                                             /dev/shm        tmpfs           nodev,nosuid,noexec 0 0
+EOF
+#------------
+#GENKERNEL
+cat > /etc/genkernel.conf << EOF
+OLDCONFIG="yes"
+MENUCONFIG="no"
+CLEAN="yes"
+MRPROPER="no"
+MOUNTBOOT="yes"
+SAVE_CONFIG="yes"
+USECOLOR="yes"
+LVM="yes"
+LUKS="yes"
+DISKLABEL="yes"
+GK_SHARE="${GK_SHARE:-/usr/share/genkernel}"
+CACHE_DIR="/var/cache/genkernel"
+DISTDIR="${GK_SHARE}/distfiles"
+LOGFILE="/var/log/genkernel.log"
+LOGLEVEL=1
+DEFAULT_KERNEL_SOURCE="/usr/src/linux"
+INITRAMFS_OVERLAY="/boot/overlay"         #for insert luks key in initramfs
+REAL_ROOT="/dev/mapper/notebook-root"
+EOF
+#COMM
+genkernel --luks --lvm initramfs
+#------------
+#LVM
+cat > /etc/lvm/lvm.conf << EOF
+issue_discards = 1
+EOF
+#------------
+sys-process/glances 
+net-analyzer/arp-scan
+x11-misc/read-edid
+x11-misc/compton
+#------------
+#INSTALL XFCE4
+emerge -av xfce4-meta xfce4-notifyd
+emerge --deselect xfce4-notifyd
+emerge -av xfce4-terminal
+emerge -av xfce-extra/xfce4-volumed-pulse
+emerge -av gtk-engines-xfce x11-themes/greybird
+emerge -av xfce-extra/thunar-volman xfce-extra/thunar-vcs-plugin  xfce-extra/thunar-media-tags-plugin xfce-extra/thunar-archive-plugin xfce-base/thunar
+emerge -av x11-misc/slim
+#------------
+perl-cleaner -allmodules
+python-updater
