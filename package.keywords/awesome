@@ -1,0 +1,5 @@
+#Awesome 4.2
+>=x11-wm/awesome-4.2  ~amd64
+
+# Vicious
+>=x11-plugins/vicious-2.1.3 

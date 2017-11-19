@@ -1,0 +1,4 @@
+# Avoid GNOME & other large deps
+app-text/poppler -qt4
+dev-util/cmake -qt4
+gnome-base/gvfs -http
