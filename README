@@ -1,21 +1,20 @@
 NOTE
 #------------
 #DISK PARTITIONING  <<GPT>>
-sda                 465,8G  0 disk  
-├─sda1  <BIOS boot>     2M  0 part  
-├─sda2                  1G  0 part  
-| └─encrypred-boot      1G  0 crypt /boot
-└─sda3              465,8G  0 part  
-  └─encrypred-lvm   465,8G  0 crypt 
-    ├─notebook-root   100G  0 lvm   /
-    └─notebook-home   200G  0 lvm   /home
-#------------
-#DURING INSTALLATION
-mount /dev/sda2 /mnt/gentoo/boot/
-mount --bind /dev/ /mnt/gentoo/dev/
-mount --bind /sys/ /mnt/gentoo/sys/
-mount --bind /run/ /mnt/gentoo/run/
-mount -t proc none /mnt/gentoo/proc/
+NAME                MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+sda                   8:0    0 465.8G  0 disk  
+|-sda1                8:1    0   512M  0 part  /boot/efi
+|-sda2                8:2    0   514M  0 part  
+| `-encrypted-boot  253:5    0   512M  0 crypt /boot
+`-sda3                8:3    0 464.8G  0 part  
+  `-root            253:2    0 464.8G  0 crypt 
+    |-notebook-root 253:3    0   100G  0 lvm   /
+    `-notebook-home 253:4    0   200G  0 lvm   /home
+
+/dev/mapper/notebook-root  on  /         type ext4 (rw,relatime,data=ordered)
+/dev/mapper/notebook-home  on  /home     type ext4 (rw,relatime,data=ordered)
+/dev/mapper/encrypted-boot on  /boot     type ext4 (rw,relatime,data=ordered)
+/dev/sda1                  on  /boot/efi type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
 #------------
 #LUKS - KERNEL 
 [*] Enable loadable module support
@@ -36,6 +35,13 @@ cryptsetup --verbose --cipher aes-xts-plain64 --key-size 512 --hash sha512 --ite
 #CREATE KEY
 dd bs=512 count=4 if=/dev/urandom of=/boot/overlay/mnt/key/root_luks.key
 cryptsetup luksAddKey /dev/sda1 /boot/overlay/mnt/key/root_luks.key
+#------------
+#DURING INSTALLATION
+mount /dev/sda2 /mnt/gentoo/boot/
+mount --bind /dev/ /mnt/gentoo/dev/
+mount --bind /sys/ /mnt/gentoo/sys/
+mount --bind /run/ /mnt/gentoo/run/
+mount -t proc none /mnt/gentoo/proc/
 #------------
 #GRUB
 cat >/etc/default/grub << EOF
@@ -107,3 +113,4 @@ emerge -av x11-misc/slim
 #------------
 perl-cleaner -allmodules
 python-updater
+
