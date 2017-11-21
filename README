@@ -111,17 +111,31 @@ x11-misc/read-edid
 x11-misc/compton
 #------------
 # X PROGRAMMS
-x11-misc/compton
+x11-misc/compton   !!!
 x11-wm/awesome-4.2
 x11-plugins/vicious
-x11-base/xorg-server
 x11-misc/slim
 x11-app/xrandr
+#X SERVER
+emerge -av x11-base/xorg-server
+
+X -configure -config file
+cp -v Xorg.conf /etc/X11/xorg.conf.d/10xorg.conf
+
+#TEST GRAPHICS
+emerge -av x11-apps/mesa-progs
+
+glxinfo | grep -i rendering
+--> direct rendering: Yes
+gxlgears
 #------------
 # SYSTEM PROGRAMMS
 app-portage/gentoolkit
 app-portage/eix
 sys-apps/mlocate
+#------------
+# HARDWARE PROGRAMMS
+sys-apps/pciutils
 #------------
 #INSTALL XFCE4
 emerge -av xfce4-meta xfce4-notifyd
