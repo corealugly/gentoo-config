@@ -53,6 +53,9 @@ mount --bind /sys/ /mnt/gentoo/sys/
 mount --bind /run/ /mnt/gentoo/run/
 mount -t proc none /mnt/gentoo/proc/
 #------------
+#MAKE 
+https://wiki.gentoo.org/wiki/Handbook:AMD64/Working/Features/ru
+#------------
 #GRUB !!!
 cat >/etc/default/grub << EOF
 GRUB_DISTRIBUTOR="corebook"
@@ -133,6 +136,7 @@ gxlgears
 app-portage/gentoolkit
 app-portage/eix
 sys-apps/mlocate
+app-portage/elogv
 #------------
 # HARDWARE PROGRAMMS
 sys-apps/pciutils
