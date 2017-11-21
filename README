@@ -11,10 +11,20 @@ sda                   8:0    0 465.8G  0 disk
     |-notebook-root 253:3    0   100G  0 lvm   /
     `-notebook-home 253:4    0   200G  0 lvm   /home
 
-/dev/mapper/notebook-root  on  /         type ext4 (rw,relatime,data=ordered)
-/dev/mapper/notebook-home  on  /home     type ext4 (rw,relatime,data=ordered)
-/dev/mapper/encrypted-boot on  /boot     type ext4 (rw,relatime,data=ordered)
-/dev/sda1                  on  /boot/efi type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
+#FSTAB --> directories stored in memory
+UUID=586fbba9-d38d-43c1-9e8b-b780a9d7a76d   /          ext4     rw,relatime,data=ordered 0 1
+UUID=d8546367-f2ee-46a4-b587-b926703bfdb1   /home      ext4     rw,relatime,data=ordered 0 0
+UUID=4fa59ac1-df34-45d1-b91a-2f37ca0c2f6b   /boot      ext4     noauto,rw,relatime,data=ordered 0 0
+UUID=2E77-3F97                              /boot/efi  ext4     noauto,rw,relatime,data=ordered 0 0
+
+# tmps
+tmpfs            /tmp               tmpfs    size=4G                               0 0
+tmpfs            /run               tmpfs    size=100M                             0 0
+tmpfs            /var/tmp           tmpfs    rw,nosuid,noatime,nodev,size=4G,mode=1777  0 0
+tmpfs            /var/tmp/portage   tmpfs    rw,nosuid,noatime,nodev,size=4G,mode=755,uid=portage,gid=portage,x-mount.mkdir=755  0 0
+# shm
+shm              /dev/shm           tmpfs    nodev,nosuid,noexec                   0 0
+proc             /proc              proc     rw,nosuid,nodev,noexec,relatime       0 0
 #------------
 #LUKS - KERNEL 
 [*] Enable loadable module support
@@ -43,7 +53,7 @@ mount --bind /sys/ /mnt/gentoo/sys/
 mount --bind /run/ /mnt/gentoo/run/
 mount -t proc none /mnt/gentoo/proc/
 #------------
-#GRUB
+#GRUB !!!
 cat >/etc/default/grub << EOF
 GRUB_DISTRIBUTOR="corebook"
 GRUB_TIMEOUT=5
@@ -53,20 +63,10 @@ GRUB_TERMINAL=console
 GRUB_DISABLE_SUBMENU=y
 EOF
 
-mkdir -p /boot/overlay/mnt/key/  "root_luks.key"   #for insert luks key in initramfs
-
 #COMM
 grub-install /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
-#------------
-#FSTAB --> directories stored in memory
-cat > /etc/fstab <<  EOF
-# tmps
-tmpfs                                           /tmp            tmpfs           size=4Gb        0 0
-tmpfs                                           /run            tmpfs           size=100M       0 0
-# shm
-shm                                             /dev/shm        tmpfs           nodev,nosuid,noexec 0 0
-EOF
+mkdir -p /boot/overlay/mnt/key/  "root_luks.key"   #for insert luks key in initramfs
 #------------
 #GENKERNEL
 cat > /etc/genkernel.conf << EOF
@@ -97,10 +97,31 @@ cat > /etc/lvm/lvm.conf << EOF
 issue_discards = 1
 EOF
 #------------
+#ADD USER
+useradd -s /bin/bash -m -G wheel,video corealugly
+
+
+
+
+#PROGRAMM LIST
+#OTHER
 sys-process/glances 
 net-analyzer/arp-scan
 x11-misc/read-edid
 x11-misc/compton
+#------------
+# X PROGRAMMS
+x11-misc/compton
+x11-wm/awesome-4.2
+x11-plugins/vicious
+x11-base/xorg-server
+x11-misc/slim
+x11-app/xrandr
+#------------
+# SYSTEM PROGRAMMS
+app-portage/gentoolkit
+app-portage/eix
+sys-apps/mlocate
 #------------
 #INSTALL XFCE4
 emerge -av xfce4-meta xfce4-notifyd
