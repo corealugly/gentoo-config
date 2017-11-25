@@ -15,7 +15,7 @@ sda                   8:0    0 465.8G  0 disk
 UUID=586fbba9-d38d-43c1-9e8b-b780a9d7a76d   /          ext4     rw,relatime,data=ordered 0 1
 UUID=d8546367-f2ee-46a4-b587-b926703bfdb1   /home      ext4     rw,relatime,data=ordered 0 0
 UUID=4fa59ac1-df34-45d1-b91a-2f37ca0c2f6b   /boot      ext4     noauto,rw,relatime,data=ordered 0 0
-UUID=2E77-3F97                              /boot/efi  ext4     noauto,rw,relatime,data=ordered 0 0
+UUID=2E77-3F97                              /boot/efi  vfat     noauto,rw 0 0
 
 # tmps
 tmpfs            /tmp               tmpfs    size=4G                               0 0
@@ -101,7 +101,7 @@ issue_discards = 1
 EOF
 #------------
 #ADD USER
-useradd -s /bin/bash -m -G wheel,video corealugly
+useradd -s /bin/bash -m -G wheel,video,plugdev corealugly
 
 
 
@@ -113,12 +113,21 @@ net-analyzer/arp-scan
 x11-misc/read-edid
 x11-misc/compton
 #------------
+#CONSOLE
+x11-misc/urxvt-perls
+x11-terms/rxvt-unicode
+app-misc/screen
+app-misc/tmux
+#------------
 # X PROGRAMMS
 x11-misc/compton   !!!
 x11-wm/awesome-4.2
 x11-plugins/vicious
 x11-misc/slim
 x11-app/xrandr
+#X OTHER
+x11-misc/gcolor2
+x11-terms/guake
 #X SERVER
 emerge -av x11-base/xorg-server
 
@@ -137,11 +146,21 @@ app-portage/gentoolkit
 app-portage/eix
 sys-apps/mlocate
 app-portage/elogv
+#HARDWARE-CLOCK
+net-misc/adjtimex
+
+adjtimex --print | grep status
 #------------
 # HARDWARE PROGRAMMS
 sys-apps/pciutils
+#NETWORK
+net-misc/networkmanager
+gnome-extra/nm-applet  +gnome-keyring
+app-crypt/seahorse
+#WIFI
+sys-firmware/iwl8000-ucode   #driver need update kernel
 #------------
-#INSTALL XFCE4
+#INSTALL XFCE4 ???
 emerge -av xfce4-meta xfce4-notifyd
 emerge --deselect xfce4-notifyd
 emerge -av xfce4-terminal
