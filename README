@@ -101,10 +101,18 @@ issue_discards = 1
 EOF
 #------------
 #ADD USER
-useradd -s /bin/bash -m -G wheel,video,plugdev corealugly
+useradd -s /bin/bash -m -G wheel,video,audio,plugdev corealugly
 
+#AUDIO
+emerge -av alsa-lib alsa-utils
 
-
+speaker-test -t wav -c 2
+speaker-test -t wav -c 6 -D surround51
+#AUDIO microphone
+arecord --list-devices
+arecord /tmp/test.wav
+or
+arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
 
 #PROGRAMM LIST
 #OTHER
