@@ -118,6 +118,11 @@ x11-misc/urxvt-perls
 x11-terms/rxvt-unicode
 app-misc/screen
 app-misc/tmux
+
+#MC
+emerge -av app-misc/mc
+-->
+http://klimer.eu/2015/05/01/use-midnight-commander-like-a-pro/
 #------------
 # X PROGRAMMS
 x11-misc/compton   !!!
@@ -146,10 +151,13 @@ app-portage/gentoolkit
 app-portage/eix
 sys-apps/mlocate
 app-portage/elogv
+
 #HARDWARE-CLOCK
 net-misc/adjtimex
 
 adjtimex --print | grep status
+#SYSTEM INFO
+--> tree /sys/class/net
 #------------
 # HARDWARE PROGRAMMS
 sys-apps/pciutils
@@ -157,8 +165,9 @@ sys-apps/pciutils
 net-misc/networkmanager
 gnome-extra/nm-applet  +gnome-keyring
 app-crypt/seahorse
+net-wireless/rfkill
 #WIFI
-sys-firmware/iwl8000-ucode   #driver need update kernel
+sys-firmware/linux-firmware   #driver need update kernel
 #------------
 #INSTALL XFCE4 ???
 emerge -av xfce4-meta xfce4-notifyd
