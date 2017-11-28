@@ -136,6 +136,13 @@ arecord /tmp/test.wav
 or
 arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
 
+#POWER MANAGER
+app-laptop/laptop-mode-tools USE="acpi bluetooth -apm -scsi"
+sys-power/ncpufreqd
+--> https://wiki.gentoo.org/wiki/Power_management/Guide/ru
+--> USB Power Saving
+--> https://wiki.gentoo.org/wiki/AMD64/FAQ/ru
+
 #PROGRAMM LIST
 #OTHER
 sys-process/glances 
