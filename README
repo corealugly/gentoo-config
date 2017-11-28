@@ -103,6 +103,28 @@ EOF
 #ADD USER
 useradd -s /bin/bash -m -G wheel,video,audio,plugdev corealugly
 
+
+#APP FOR AWESOME
+dev-libs/mpc
+x11-misc/unclutter
+x11-misc/dmenu
+media-gfx/scrot
+x11-misc/xsel
+media-sound/mpd
+x11-apps/xbacklight
+
+#HELP
+xprop |grep "CLASS"  --> view name and class for rules
+xev          --> key code
+xmodmap -pke --> key code
+xmodmap      --> key code
+
+#LOCK
+media-gfx/imagemagick
+x11-misc/i3lock
+x11-misc/xautolock
+media-gfx/scrot
+
 #AUDIO
 emerge -av alsa-lib alsa-utils
 
