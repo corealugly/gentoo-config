@@ -105,13 +105,17 @@ useradd -s /bin/bash -m -G wheel,video,audio,plugdev corealugly
 
 
 #APP FOR AWESOME
+media-sound/ncmpcpp clock outputs taglib unicode visualizer
+media-sound/mpd
 dev-libs/mpc
 x11-misc/unclutter
 x11-misc/dmenu
 media-gfx/scrot
 x11-misc/xsel
-media-sound/mpd
 x11-apps/xbacklight
+x11-misc/kbdd
+x11-apps/setxkbmap
+x11-misc/compton
 
 #HELP
 xprop |grep "CLASS"  --> view name and class for rules
@@ -136,6 +140,11 @@ arecord /tmp/test.wav
 or
 arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
 
+#MEDIA PLAYER DAEMON
+media-sound/mpd
+media-sound/mpc
+media-sound/ncmpcpp clock outputs taglib unicode visualizer
+
 #POWER MANAGER
 app-laptop/laptop-mode-tools USE="acpi bluetooth -apm -scsi"
 sys-power/ncpufreqd
@@ -148,7 +157,9 @@ sys-power/ncpufreqd
 sys-process/glances 
 net-analyzer/arp-scan
 x11-misc/read-edid
-x11-misc/compton
+media-gfx/feh     --> image viewer
+app-admin/keepassxc
+
 #------------
 #CONSOLE
 x11-misc/urxvt-perls
@@ -170,6 +181,7 @@ x11-app/xrandr
 #X OTHER
 x11-misc/gcolor2
 x11-terms/guake
+x11-misc/unclutter
 #X SERVER
 emerge -av x11-base/xorg-server
 
@@ -200,6 +212,13 @@ adjtimex --print | grep status
 sys-apps/pciutils
 #NETWORK
 net-misc/networkmanager
+->>
+cat > /etc/NetworkManager/NetworkManager.conf << EOF
+[main]
+plugins=keyfile
+dns=dnsmasq
+EOF
+-<<
 gnome-extra/nm-applet  +gnome-keyring
 app-crypt/seahorse
 net-wireless/rfkill
