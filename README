@@ -114,7 +114,7 @@ media-sound/ncmpcpp clock outputs taglib unicode visualizer
 media-sound/mpd
 dev-libs/mpc
 x11-misc/unclutter
-x11-misc/dmenu
+x11-misc/dmenu --> x11-misc/rofi
 media-gfx/scrot
 x11-misc/xsel
 x11-apps/xbacklight ??!!
