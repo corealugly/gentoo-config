@@ -11,7 +11,7 @@ sda                   8:0    0 465.8G  0 disk
     |-notebook-root 253:3    0   100G  0 lvm   /
     `-notebook-home 253:4    0   200G  0 lvm   /home
 
-#FSTAB --> directories stored in memory
+#FSTAB --> directories stored in memory V2
 UUID=586fbba9-d38d-43c1-9e8b-b780a9d7a76d   /          ext4     rw,relatime,data=ordered 0 1
 UUID=d8546367-f2ee-46a4-b587-b926703bfdb1   /home      ext4     rw,relatime,data=ordered 0 0
 UUID=4fa59ac1-df34-45d1-b91a-2f37ca0c2f6b   /boot      ext4     noauto,rw,relatime,data=ordered 0 0
@@ -21,7 +21,12 @@ UUID=2E77-3F97                              /boot/efi  vfat     noauto,rw 0 0
 tmpfs            /tmp               tmpfs    size=4G                               0 0
 tmpfs            /run               tmpfs    size=100M                             0 0
 tmpfs            /var/tmp           tmpfs    rw,nosuid,noatime,nodev,size=4G,mode=1777  0 0
-tmpfs            /var/tmp/portage   tmpfs    rw,nosuid,noatime,nodev,size=4G,mode=755,uid=portage,gid=portage,x-mount.mkdir=755  0 0
+tmpfs            /var/tmp/portage   tmpfs    rw,nosuid,noatime,nodev,size=8G,mode=755,uid=portage,gid=portage,x-mount.mkdir=755  0 0
+
+tmpfs            /var/log           tmpfs    defaults,noatime,nosuid,mode=0755,size=100m    0 0
+tmpfs            /var/run           tmpfs    defaults,noatime,nosuid,mode=0755,size=2m    0 0
+tmpfs            /var/spool/mqueue  tmpfs    defaults,noatime,nosuid,mode=0700,gid=12,size=30m    0 0
+
 # shm
 shm              /dev/shm           tmpfs    nodev,nosuid,noexec                   0 0
 proc             /proc              proc     rw,nosuid,nodev,noexec,relatime       0 0
@@ -101,10 +106,10 @@ issue_discards = 1
 EOF
 #------------
 #ADD USER
-useradd -s /bin/bash -m -G wheel,video,audio,plugdev corealugly
+useradd -s /bin/bash -m -G wheel,video,docker,audio,plugdev corealugly
 
 
-#APP FOR AWESOME
+#AWESOME
 media-sound/ncmpcpp clock outputs taglib unicode visualizer
 media-sound/mpd
 dev-libs/mpc
@@ -112,37 +117,45 @@ x11-misc/unclutter
 x11-misc/dmenu
 media-gfx/scrot
 x11-misc/xsel
-x11-apps/xbacklight
+x11-apps/xbacklight ??!!
 x11-misc/kbdd
 x11-apps/setxkbmap
 x11-misc/compton
-
-#HELP
+#AWESOME-->#HELP
 xprop |grep "CLASS"  --> view name and class for rules
 xev          --> key code
 xmodmap -pke --> key code
 xmodmap      --> key code
-
-#LOCK
+#AWESOME-->#SCREENLOCK
 media-gfx/imagemagick
 x11-misc/i3lock
 x11-misc/xautolock
 media-gfx/scrot
 
 #AUDIO
-emerge -av alsa-lib alsa-utils
-
+media-libs/alsa-lib
+media-sound/alsa-utils
+#AUDIO-->#TEST
 speaker-test -t wav -c 2
 speaker-test -t wav -c 6 -D surround51
-#AUDIO microphone
+#AUDIO-->#microphone
 arecord --list-devices
-arecord /tmp/test.wav
-or
-arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
+#AUDIO-->#MICROPHONE-->#TEST
+-> arecord /tmp/test.wav
+-> arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
+#AUDIO-->#PULSEAUDIO
+media-sound/pulseaudio
+media-sound/pavucontrol
+#AUDIO-->#PULSEAUDIO-->#START
+start-pulseaudio-x11
 
 #MEDIA PLAYER DAEMON
 media-sound/mpd
 media-sound/mpc
+  -> cat > /etc/profile.d/MPD.sh << EOF
+     export MPD_HOST="127.0.0.1"
+     export MPD_PORT="6600"
+     EOF
 media-sound/ncmpcpp clock outputs taglib unicode visualizer
 
 #POWER MANAGER
@@ -154,12 +167,17 @@ sys-power/ncpufreqd
 
 #PROGRAMM LIST
 #OTHER
-sys-process/glances 
-net-analyzer/arp-scan
-x11-misc/read-edid
+sys-process/glances  ??
+net-analyzer/arp-scan ??
+x11-misc/read-edid    ??
 media-gfx/feh     --> image viewer
 app-admin/keepassxc
-
+app-office/libreoffice-bin
+media-video/simplescreenrecorder
+media-sound/gnome-sound-recorder --> !!remove!!
+media-video/mpv      --> media player almost console; need for SVP
+media-video/smplayer --> media player
+app-editors/atom
 #------------
 #CONSOLE
 x11-misc/urxvt-perls
@@ -173,8 +191,9 @@ emerge -av app-misc/mc
 http://klimer.eu/2015/05/01/use-midnight-commander-like-a-pro/
 #------------
 # X PROGRAMMS
-x11-misc/compton   !!!
+x11-misc/compton   
 x11-wm/awesome-4.2
+x11-misc/pcmanfm --> lxde-base/lxmenu-data
 x11-plugins/vicious
 x11-misc/slim
 x11-app/xrandr
@@ -182,36 +201,45 @@ x11-app/xrandr
 x11-misc/gcolor2
 x11-terms/guake
 x11-misc/unclutter
-#X SERVER
-emerge -av x11-base/xorg-server
-
-X -configure -config file
-cp -v Xorg.conf /etc/X11/xorg.conf.d/10xorg.conf
-
-#TEST GRAPHICS
-emerge -av x11-apps/mesa-progs
-
-glxinfo | grep -i rendering
---> direct rendering: Yes
-gxlgears
+#XServer
+  emerge -av x11-base/xorg-server
+#XServer-->#Config
+  -> X -configure -config file
+  -> cp -v Xorg.conf /etc/X11/xorg.conf.d/10xorg.conf
+#XServer-->#TestGraphics
+  emerge -av x11-apps/mesa-progs
+  glxinfo | grep -i rendering  -->  direct rendering: Yes
+  gxlgears
 #------------
-# SYSTEM PROGRAMMS
-app-portage/gentoolkit
-app-portage/eix
-sys-apps/mlocate
-app-portage/elogv
-
-#HARDWARE-CLOCK
-net-misc/adjtimex
-
-adjtimex --print | grep status
-#SYSTEM INFO
---> tree /sys/class/net
+#SystemProgramm
+  app-portage/gentoolkit
+  app-portage/eix
+  sys-apps/mlocate
+  app-portage/elogv
+#SystemProgramm-->#Fs
+  sys-fs/ntfs3g
+#Systemprogramm-->#Network
+  sys-apps/iproute2
+  net-misc/bridge-utils
+#SystemProgramm-->#Hardware-clock
+  net-misc/adjtimex
+  adjtimex --print | grep status
+#SystemProgramm--># virtualisation
+  app-emulation/virt-manager
+  app-emulation/docker
+#SystemProgramm-->#info
+  --> tree /sys/class/net
+  net-analyzer/nbwmon     !!!
 #------------
 # HARDWARE PROGRAMMS
 sys-apps/pciutils
 #NETWORK
 net-misc/networkmanager
+net-dns/dnsmasq
+net-fs/autofs   --> automount
+net-fs/nfs-utils --> client and server
+net-fs/cifs-utils --> dependen of SAMBA
+net-fs/sshfs
 ->>
 cat > /etc/NetworkManager/NetworkManager.conf << EOF
 [main]
@@ -222,6 +250,7 @@ EOF
 gnome-extra/nm-applet  +gnome-keyring
 app-crypt/seahorse
 net-wireless/rfkill
+net-wireless/bluez
 #WIFI
 sys-firmware/linux-firmware   #driver need update kernel
 #------------
