@@ -165,6 +165,79 @@ sys-power/ncpufreqd
 --> USB Power Saving
 --> https://wiki.gentoo.org/wiki/AMD64/FAQ/ru
 
+# SYSTEM OPTIONS --> #SUDO
+Defaults  env_keep += "SSH_AUTH_SOCK"
+
+# SYSTEM OPTIONS --> #SYNAPTIC
+synclient LeftEdge=1574
+synclient RightEdge=5369
+synclient TopEdge=1354
+synclient BottomEdge=4571
+synclient FingerLow=25
+synclient FingerHigh=30
+synclient MaxTapTime=180
+synclient MaxTapMove=254
+synclient MaxDoubleTapTime=180
+synclient SingleTapTimeout=180
+synclient ClickTime=100
+synclient EmulateMidButtonTime=0
+synclient EmulateTwoFingerMinZ=282
+synclient EmulateTwoFingerMinW=7
+synclient VertScrollDelta=115
+synclient HorizScrollDelta=115
+synclient VertEdgeScroll=0
+synclient HorizEdgeScroll=1
+synclient CornerCoasting=0
+synclient VertTwoFingerScroll=1
+synclient HorizTwoFingerScroll=0
+synclient MinSpeed=1
+synclient MaxSpeed=1.75
+synclient AccelFactor=0.0345901
+synclient TouchpadOff=0
+synclient LockedDrags=0
+synclient LockedDragTimeout=5000
+synclient RTCornerButton=0
+synclient RBCornerButton=0
+synclient LTCornerButton=0
+synclient LBCornerButton=0
+synclient TapButton1=1
+synclient TapButton2=0
+synclient TapButton3=2
+synclient ClickFinger1=1
+synclient ClickFinger2=3
+synclient ClickFinger3=2
+synclient CircularScrolling=0
+synclient CircScrollDelta=0.1
+synclient CircScrollTrigger=0
+synclient CircularPad=0
+synclient PalmDetect=0
+synclient PalmMinWidth=10
+synclient PalmMinZ=200
+synclient CoastingSpeed=20
+synclient CoastingFriction=50
+synclient PressureMotionMinZ=30
+synclient PressureMotionMaxZ=160
+synclient PressureMotionMinFactor=1
+synclient PressureMotionMaxFactor=1
+synclient GrabEventDevice=0
+synclient TapAndDragGesture=1
+synclient AreaLeftEdge=0
+synclient AreaRightEdge=0
+synclient AreaTopEdge=0
+synclient AreaBottomEdge=0
+synclient HorizHysteresis=28
+synclient VertHysteresis=28
+synclient ClickPad=1
+synclient RightButtonAreaLeft=3471
+synclient RightButtonAreaRight=0
+synclient RightButtonAreaTop=4158
+synclient RightButtonAreaBottom=0
+synclient MiddleButtonAreaLeft=0
+synclient MiddleButtonAreaRight=0
+synclient MiddleButtonAreaTop=0
+synclient MiddleButtonAreaBottom=0
+
+
 #PROGRAMM LIST
 #OTHER
 sys-process/glances  ??
@@ -211,25 +284,32 @@ x11-misc/unclutter
   glxinfo | grep -i rendering  -->  direct rendering: Yes
   gxlgears
 #------------
-#SystemProgramm
+#SYSTEMPROGRAMM
   app-portage/gentoolkit
   app-portage/eix
   sys-apps/mlocate
   app-portage/elogv
-#SystemProgramm-->#Fs
+#SYSTEMpROGRAMM-->#FS
   sys-fs/ntfs3g
-#Systemprogramm-->#Network
+#SYSTEMPROGRAMM-->#NETWORK
   sys-apps/iproute2
   net-misc/bridge-utils
-#SystemProgramm-->#Hardware-clock
+#SYSTEMPROGRAMM-->#HARDWARE-CLOCK
   net-misc/adjtimex
   adjtimex --print | grep status
-#SystemProgramm--># virtualisation
+#SYSTEMPROGRAMM--># VIRTUALISATION
   app-emulation/virt-manager
   app-emulation/docker
-#SystemProgramm-->#info
+#SYSTEMPROGRAMM-->#INFO
   --> tree /sys/class/net
   net-analyzer/nbwmon     !!!
+#SYSTEMPROGRAMM-->#ARCH
+  app-arch/file-roller
+  app-arch/cpio
+  app-arch/p7zip
+  app-arch/unrar
+  app-arch/unzip
+  app-arch/bzip2
 #------------
 # HARDWARE PROGRAMMS
 sys-apps/pciutils
@@ -264,5 +344,5 @@ emerge -av xfce-extra/thunar-volman xfce-extra/thunar-vcs-plugin  xfce-extra/thu
 emerge -av x11-misc/slim
 #------------
 perl-cleaner -allmodules
-python-updater
+#del#python-updater
 
