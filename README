@@ -165,6 +165,11 @@ sys-power/ncpufreqd
 --> USB Power Saving
 --> https://wiki.gentoo.org/wiki/AMD64/FAQ/ru
 
+# SYSTEM OPTIONS --> #ACPI
+emerge -av laptop-mode-tools
+# rc-update add laptop_mode default
+# rc-update add acpid default
+
 # SYSTEM OPTIONS --> #SUDO
 Defaults  env_keep += "SSH_AUTH_SOCK"
 
