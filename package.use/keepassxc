@@ -1,1 +1,2 @@
 >=dev-libs/libpcre-8.41 pcre16
+app-admin/keepassxc autotype -debug http

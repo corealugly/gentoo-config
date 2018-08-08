@@ -1,2 +1,1 @@
 app-admin/conky apcupsd curl hddtemp imlib iostats lua lua-cairo lua-imlib math moc mpd rss vim-syntax wifi -nvidia
-sys-apps/util-linux tty-helpers
