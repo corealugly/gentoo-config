@@ -31,6 +31,14 @@ tmpfs            /var/spool/mqueue  tmpfs    defaults,noatime,nosuid,mode=0700,g
 shm              /dev/shm           tmpfs    nodev,nosuid,noexec                   0 0
 proc             /proc              proc     rw,nosuid,nodev,noexec,relatime       0 0
 #------------
+#HFS+ (MACOS) ???
+File systems  --->
+    Miscellaneous filesystems  --->
+     Apple Extended HFS file system support
+     Apple Macintosh file system support
+    Partition types  --->
+    [*] Advanced partition selection
+    [*]   Macintosh partition map support
 #LUKS - KERNEL 
 [*] Enable loadable module support
 Device Drivers --->
@@ -143,11 +151,29 @@ arecord --list-devices
 #AUDIO-->#MICROPHONE-->#TEST
 -> arecord /tmp/test.wav
 -> arecord --channels=1 --duration=2 --format=dat --vumeter=stereo /tmp/test.wav
-#AUDIO-->#PULSEAUDIO
-media-sound/pulseaudio
-media-sound/pavucontrol
-#AUDIO-->#PULSEAUDIO-->#START
-start-pulseaudio-x11
+
+###AUDIO-->#PULSEAUDIO
+####Shortcut Menu Entries
+
+The set of menu entries starting with 'Manager...' and ending with 'Configure Local Sound Server...' are shortcuts to these graphical pulseaudio tools:
+
+    paman
+    pavucontrol
+    pavumeter
+    pavumeter --record
+    paprefs
+
+If they are not installed, the menu entries will appear disabled.
+
+The tools present in portage can be installed with:
+
+    media-sound/pulseaudio
+    media-sound/pavucontrol
+    media-sound/paprefs
+    media-sound/pavumeter
+
+####AUDIO-->#PULSEAUDIO-->#START
+    start-pulseaudio-x11
 
 #MEDIA PLAYER DAEMON
 media-sound/mpd
@@ -256,6 +282,9 @@ media-sound/gnome-sound-recorder --> !!remove!!
 media-video/mpv      --> media player almost console; need for SVP
 media-video/smplayer --> media player
 app-editors/atom
+#OTHER -->  SYNC PRIMARY and CLIPBOARD BUFFER
+clipmenu 
+clipnotify
 #------------
 #CONSOLE
 x11-misc/urxvt-perls
