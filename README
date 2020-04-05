@@ -1,4 +1,7 @@
 NOTE
+#### FIX
+```ln -sv  /etc/portage/world  /var/lib/portage/world```
+
 #------------
 #DISK PARTITIONING  <<GPT>>
 NAME                MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
